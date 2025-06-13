@@ -194,7 +194,7 @@ tasks.jar {
                 "Implementation-Timestamp" to Instant.now().toString(),
                 "FMLCorePluginContainsFMLMod" to "true",
                 "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "MixinConfigs" to "$modId.mixins.vanilla.json,$modId.mixins.forge.json"
+                "MixinConfigs" to "$modId.mixins.vanilla.json"
             )
         )
     }
