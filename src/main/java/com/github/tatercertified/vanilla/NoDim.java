@@ -14,7 +14,7 @@ public class NoDim {
 
     public static final GameRules.Key<GameRules.BooleanValue> DISABLE_END =
             GameRulesMixin.register(
-                    "disableEnd", GameRules.Category.MISC, BooleanValueMixin.create(true));
+                    "disableEnd", GameRules.Category.MISC, BooleanValueMixin.create(false));
     public static final GameRules.Key<GameRules.BooleanValue> DISABLE_NETHER =
             GameRulesMixin.register(
                     "disableNether", GameRules.Category.MISC, BooleanValueMixin.create(false));
