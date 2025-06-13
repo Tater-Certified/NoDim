@@ -1,0 +1,18 @@
+{
+  "compatibilityLevel": "JAVA_21",
+  "required": true,
+  "minVersion": "0.8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "package": "com.github.tatercertified.vanilla.mixin",
+  "mixins": [
+    "BooleanValueMixin",
+    "EndPortalMixin",
+    "GameRulesMixin",
+    "GatewayPortalMixin",
+    "NetherPortalMixin"
+  ],
+  "client": [],
+  "server": []
+}

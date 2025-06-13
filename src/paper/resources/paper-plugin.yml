@@ -1,0 +1,18 @@
+name: '${mod_name}'
+version: '${version}'
+main: 'com.github.tatercertified.paper.NoDimPaper'
+description: '${description}'
+api-version: '${minecraft_version}'
+bootstrapper: 'com.github.nodim.paper.NoDimPaperBootstrap'
+loader: 'com.github.nodim.paper.NoDimPaperLoader'
+#dependencies:
+#  bootstrap:
+#    RegistryPlugin:
+#      load: BEFORE
+#      required: true
+#      join-classpath: true
+#  server:
+#    RequiredPlugin:
+#      load: AFTER
+#      required: true
+#      join-classpath: false
