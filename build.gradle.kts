@@ -13,7 +13,7 @@ plugins {
 }
 
 base {
-    archivesName = "$modName-$minecraftVersion"
+    archivesName = "$modName-$minMinecraftVersion"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
