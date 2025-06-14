@@ -117,9 +117,9 @@ tasks.register<ShadowJar>("relocateFabricJar") {
     from(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile)
     archiveClassifier.set("fabric-relocated")
     dependencies {
-        exclude("com/example/templatemod/mixin/vanilla/**")
+        exclude("com/github/tatercertified/mixin/vanilla/**")
     }
-    relocate("com.example.templatemod.vanilla", "com.example.templatemod.y_intmdry")
+    relocate("com.github.tatercertified.vanilla", "com.github.tatercertified.y_intmdry")
 }
 
 unimined.minecraft(forge) {
@@ -183,6 +183,7 @@ tasks.jar {
         paper.output,
         sponge.output,
     )
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes(
