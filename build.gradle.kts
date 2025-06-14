@@ -7,14 +7,13 @@ plugins {
     id("maven-publish")
     id("idea")
     id("eclipse")
-    alias(libs.plugins.blossom)
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
     alias(libs.plugins.unimined)
 }
 
 base {
-    archivesName = modName
+    archivesName = "$modName-$minecraftVersion"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
@@ -154,12 +153,8 @@ unimined.minecraft(sponge) {
 }
 
 dependencies {
-    mainCompileOnly(libs.mixinconstraints)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    mainCompileOnly(libs.mixinextras)
-    mainCompileOnly(libs.asmtree)
-    mainAnnotationProcessor(libs.mixinextras)
     paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")
     paperCompileOnly(libs.ignite.api)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
