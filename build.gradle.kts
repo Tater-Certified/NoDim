@@ -57,6 +57,8 @@ val sponge: SourceSet by sourceSets.creating
 
 val mainCompileOnly: Configuration by configurations.creating
 configurations.compileOnly.get().extendsFrom(mainCompileOnly)
+val mainAnnotationProcessor: Configuration by configurations.creating
+configurations.annotationProcessor.get().extendsFrom(mainAnnotationProcessor)
 val fabricCompileOnly: Configuration by configurations.getting
 val forgeCompileOnly: Configuration by configurations.getting
 val neoforgeCompileOnly: Configuration by configurations.getting
@@ -152,8 +154,12 @@ unimined.minecraft(sponge) {
 }
 
 dependencies {
+    mainCompileOnly(libs.mixinconstraints)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
+    mainCompileOnly(libs.mixinextras)
+    mainCompileOnly(libs.asmtree)
+    mainAnnotationProcessor(libs.mixinextras)
     paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")
     paperCompileOnly(libs.ignite.api)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")

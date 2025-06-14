@@ -5,6 +5,7 @@
   "injectors": {
     "defaultRequire": 1
   },
+  "plugin": "com.github.tatercertified.vanilla.NoDimMixinPlugin",
   "package": "com.github.tatercertified.vanilla.mixin",
   "mixins": [
     "BooleanValueMixin",
