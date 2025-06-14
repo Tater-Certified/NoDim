@@ -153,6 +153,7 @@ unimined.minecraft(sponge) {
 }
 
 dependencies {
+    mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
     paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")

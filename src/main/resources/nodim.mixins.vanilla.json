@@ -1,17 +1,22 @@
 {
-  "compatibilityLevel": "JAVA_21",
-  "required": true,
+  "compatibilityLevel": "JAVA_16",
+  "required": false,
   "minVersion": "0.8",
   "injectors": {
     "defaultRequire": 1
   },
+  "plugin": "com.github.tatercertified.vanilla.NoDimMixinPlugin",
   "package": "com.github.tatercertified.vanilla.mixin",
   "mixins": [
     "BooleanValueMixin",
     "EndPortalMixin",
     "GameRulesMixin",
-    "GatewayPortalMixin",
-    "NetherPortalMixin"
+    "NetherPortalMixin",
+    "TheGatewayPortalMixin",
+    "v1_21.GatewayPortalMixin",
+    "v1_21_5.EndPortalMixin",
+    "v1_21_5.GatewayPortalMixin",
+    "v1_21_5.NetherPortalMixin"
   ],
   "client": [],
   "server": []

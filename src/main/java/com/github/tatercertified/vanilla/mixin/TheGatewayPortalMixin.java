@@ -9,9 +9,8 @@ import com.github.tatercertified.vanilla.annotation.MCVer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,14 +18,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@MCVer(min = "1.12.2", max = "1.21.4")
-@Mixin(NetherPortalBlock.class)
-public class NetherPortalMixin {
-    @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
-    private void nodim$checkIfEndIsEnabled(
-            BlockState blockState, Level level, BlockPos blockPos, Entity entity, CallbackInfo ci) {
+@MCVer(min = "1.12.2", max = "1.20.6")
+@Mixin(TheEndGatewayBlockEntity.class)
+public class TheGatewayPortalMixin {
+    @Inject(method = "teleportTick", at = @At("HEAD"), cancellable = true)
+    private static void nodim$checkIfGatewayIsEnabled(
+            Level level,
+            BlockPos pos,
+            BlockState state,
+            TheEndGatewayBlockEntity blockEntity,
+            CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_NETHER)) {
+                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }
