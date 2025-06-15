@@ -5,15 +5,11 @@ object ProjectInfo
 val Project.author: String get() = properties["author"].toString()
 val Project.modName: String get() = properties["mod_name"].toString()
 val Project.modId: String get() = properties["mod_id"].toString()
-val Project.description: String get() = properties["description"].toString()
 val Project.license: String get() = properties["license"].toString()
 
-val Project.homepageUrl: String get() = properties["homepage_url"].toString()
-val Project.issueUrl: String get() = properties["issue_url"].toString()
 val Project.sourceUrl: String get() = properties["source_url"].toString()
 
 val Project.minecraftVersion: String get() = properties["minecraft_version"].toString()
-val Project.minMinecraftVersion: String get() = properties["min_minecraft_version"].toString()
 val Project.parchmentMinecraft: String get() = properties["parchment_minecraft"].toString()
 val Project.parchmentVersion: String get() = properties["parchment_version"].toString()
 
