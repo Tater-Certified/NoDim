@@ -14,7 +14,6 @@ val Project.sourceUrl: String get() = properties["source_url"].toString()
 
 val Project.minecraftVersion: String get() = properties["minecraft_version"].toString()
 val Project.minMinecraftVersion: String get() = properties["min_minecraft_version"].toString()
-val Project.maxMinecraftVersion: String get() = properties["max_minecraft_version"].toString()
 val Project.parchmentMinecraft: String get() = properties["parchment_minecraft"].toString()
 val Project.parchmentVersion: String get() = properties["parchment_version"].toString()
 
