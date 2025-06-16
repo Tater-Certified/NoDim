@@ -11,40 +11,137 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public final class MinecraftVersion {
+    private static String cachedVersion;
+    private static Mapping cachedMapping;
+
     public static String getVersion() {
-        // 1.19.4 and Above
-        try {
-            Field builtIn = DetectedVersion.class.getField("field_25319");
-            Method version = builtIn.getType().getDeclaredMethod("method_48019");
-            return (String) version.invoke(builtIn.get(null));
-        } catch (NoSuchFieldException
-                | IllegalAccessException
-                | NoSuchMethodException
-                | InvocationTargetException ignored) {
+        if (cachedVersion != null) {
+            return cachedVersion;
         }
-        // 1.19.3 - 1.18
-        try {
-            Field builtIn = DetectedVersion.class.getField("field_25319");
-            Method version = builtIn.getType().getDeclaredMethod("getName");
-            return (String) version.invoke(builtIn.get(null));
-        } catch (NoSuchFieldException
-                | NoSuchMethodException
-                | IllegalAccessException
-                | InvocationTargetException ignored) {
+
+        // Intermediary
+        if (cachedMapping == null) {
+            // 1.19.4 and Above
+            try {
+                Field builtIn = DetectedVersion.class.getField("field_25319");
+                cachedMapping = Mapping.Mojmap; // Intermediary compatible
+                Method version = builtIn.getType().getDeclaredMethod("method_48019");
+                String output = (String) version.invoke(builtIn.get(null));
+                return cachedVersion = output;
+            } catch (NoSuchFieldException
+                    | IllegalAccessException
+                    | NoSuchMethodException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.19.3 - 1.18
+            try {
+                Field builtIn = DetectedVersion.class.getField("field_25319");
+                cachedMapping = Mapping.Mojmap; // Intermediary compatible
+                Method version = builtIn.getType().getDeclaredMethod("getName");
+                return cachedVersion = (String) version.invoke(builtIn.get(null));
+            } catch (NoSuchFieldException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.14 - 1.17.1
+            try {
+                Method tryGetVersion = DetectedVersion.class.getMethod("method_16672");
+                cachedMapping = Mapping.Mojmap; // Intermediary compatible
+                var worldVer = tryGetVersion.invoke(null);
+                Method getName = worldVer.getClass().getDeclaredMethod("getName");
+                return cachedVersion = (String) getName.invoke(worldVer);
+            } catch (NoSuchMethodException
+                    | InvocationTargetException
+                    | IllegalAccessException ignored) {
+            }
         }
-        // 1.14 - 1.17.1
-        try {
-            Method tryGetVersion = DetectedVersion.class.getMethod("method_16672");
-            var worldVer = tryGetVersion.invoke(null);
-            Method getName = worldVer.getClass().getDeclaredMethod("getName");
-            return (String) getName.invoke(worldVer);
-        } catch (NoSuchMethodException
-                | InvocationTargetException
-                | IllegalAccessException ignored) {
+
+        // Mojmap
+        if (cachedMapping == null || cachedMapping == Mapping.Mojmap) {
+            // 1.19.4 and Above
+            try {
+                Field builtIn = DetectedVersion.class.getField("BUILT_IN");
+                cachedMapping = Mapping.Mojmap;
+                Method version = builtIn.getType().getDeclaredMethod("getName");
+                String output = (String) version.invoke(builtIn.get(null));
+                return cachedVersion = output;
+            } catch (NoSuchFieldException
+                    | IllegalAccessException
+                    | NoSuchMethodException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.19.3 - 1.18
+            try {
+                Field builtIn = DetectedVersion.class.getField("BUILT_IN");
+                cachedMapping = Mapping.Mojmap;
+                Method version = builtIn.getType().getDeclaredMethod("getName");
+                return cachedVersion = (String) version.invoke(builtIn.get(null));
+            } catch (NoSuchFieldException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.14 - 1.17.1
+            try {
+                Method tryGetVersion = DetectedVersion.class.getMethod("tryDetectVersion");
+                cachedMapping = Mapping.Mojmap;
+                var worldVer = tryGetVersion.invoke(null);
+                Method getName = worldVer.getClass().getDeclaredMethod("getName");
+                return cachedVersion = (String) getName.invoke(worldVer);
+            } catch (NoSuchMethodException
+                    | InvocationTargetException
+                    | IllegalAccessException ignored) {
+            }
         }
+
+        // SRG
+        if (cachedMapping == null || cachedMapping == Mapping.SRG) {
+            // 1.19.4 and Above
+            try {
+                Field builtIn = DetectedVersion.class.getField("f_132476_");
+                cachedMapping = Mapping.SRG;
+                Method version = builtIn.getType().getDeclaredMethod("m_132493_");
+                String output = (String) version.invoke(builtIn.get(null));
+                return cachedVersion = output;
+            } catch (NoSuchFieldException
+                    | IllegalAccessException
+                    | NoSuchMethodException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.19.3 - 1.18
+            try {
+                Field builtIn = DetectedVersion.class.getField("f_132476_");
+                cachedMapping = Mapping.SRG;
+                Method version = builtIn.getType().getDeclaredMethod("getName");
+                return cachedVersion = (String) version.invoke(builtIn.get(null));
+            } catch (NoSuchFieldException
+                    | NoSuchMethodException
+                    | IllegalAccessException
+                    | InvocationTargetException ignored) {
+            }
+            // 1.14 - 1.17.1
+            try {
+                Method tryGetVersion = DetectedVersion.class.getMethod("m_132490_");
+                cachedMapping = Mapping.SRG;
+                var worldVer = tryGetVersion.invoke(null);
+                Method getName = worldVer.getClass().getDeclaredMethod("getName");
+                return cachedVersion = (String) getName.invoke(worldVer);
+            } catch (NoSuchMethodException
+                    | InvocationTargetException
+                    | IllegalAccessException ignored) {
+            }
+        }
+
+        // TODO Spigot
+        if (cachedMapping == null || cachedMapping == Mapping.Spigot) {}
 
         // Unknown Version
         throw new RuntimeException("No Valid Minecraft Version Found");
+    }
+
+    public static Mapping getMapping() {
+        return cachedMapping;
     }
 
     public static boolean isBetween(String inputVer, String min, String max) {

@@ -22,7 +22,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @MCVer(min = "1.21", max = "1.21.4")
 @Mixin(EndGatewayBlock.class)
 public class GatewayPortalMixin {
-    @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = {
+                "entityInside", // Mojmap
+                "method_9548" // Intermediary
+            },
+            at = @At("HEAD"),
+            cancellable = true)
     private void nodim$checkIfGatewayIsEnabled(
             BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld

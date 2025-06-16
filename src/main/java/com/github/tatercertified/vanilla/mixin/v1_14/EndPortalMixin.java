@@ -22,7 +22,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @MCVer(min = "1.14", max = "1.21.4")
 @Mixin(EndPortalBlock.class)
 public class EndPortalMixin {
-    @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = {
+                "entityInside", // Mojmap
+                "method_9548", // Intermediary
+                "m_7892_" // SRG
+            },
+            at = @At("HEAD"),
+            cancellable = true)
     private void nodim$checkIfEndIsEnabled(
             BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld

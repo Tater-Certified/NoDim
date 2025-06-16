@@ -5,6 +5,7 @@
 package com.github.tatercertified.vanilla;
 
 import com.github.tatercertified.vanilla.annotation.MCVer;
+import com.github.tatercertified.vanilla.util.Mapping;
 import com.github.tatercertified.vanilla.util.MinecraftVersion;
 
 import org.objectweb.asm.tree.AnnotationNode;
@@ -41,6 +42,19 @@ public class NoDimMixinPlugin implements IMixinConfigPlugin {
         }
 
         if (mixinClassNode.visibleAnnotations != null) {
+            // Check mappings
+            for (AnnotationNode annotation : mixinClassNode.visibleAnnotations) {
+                if (annotation.desc.equals(
+                        com.github.tatercertified.vanilla.annotation.Map.class
+                                .descriptorString())) {
+                    Mapping mapping = Mapping.fromString(((String[]) annotation.values.get(1))[1]);
+                    if (mapping != MinecraftVersion.getMapping()) {
+                        return false;
+                    }
+                }
+            }
+
+            // Check version
             for (AnnotationNode annotation : mixinClassNode.visibleAnnotations) {
                 if (annotation.desc.equals(MCVer.class.descriptorString())) {
                     Map<String, Object> annotationValues = new HashMap<>();

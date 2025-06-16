@@ -19,7 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @MCVer(min = "1.14", max = "1.16.5")
 @Mixin(TheEndGatewayBlockEntity.class)
 public class TheEndGatewayMixin {
-    @Inject(method = "method_16896", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = {
+                "tick", // Mojmap
+                "method_16896", // Intermediary
+                "m_155107_" // SRG
+            },
+            at = @At("HEAD"),
+            cancellable = true)
     private void nodim$checkIfGatewayIsEnabled(CallbackInfo ci) {
         Level level = ((TheEndGatewayBlockEntity) (Object) this).getLevel();
         if (level instanceof ServerLevel

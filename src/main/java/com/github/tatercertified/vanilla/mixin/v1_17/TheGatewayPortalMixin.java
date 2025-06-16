@@ -21,7 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @MCVer(min = "1.17", max = "1.20.6")
 @Mixin(TheEndGatewayBlockEntity.class)
 public class TheGatewayPortalMixin {
-    @Inject(method = "teleportTick", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = {
+                "teleportTick", // Mojmap
+                "method_31702", // Intermediary
+                "m_155844_" // SRG
+            },
+            at = @At("HEAD"),
+            cancellable = true)
     private static void nodim$checkIfGatewayIsEnabled(
             Level level,
             BlockPos pos,
