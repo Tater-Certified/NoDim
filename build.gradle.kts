@@ -114,11 +114,8 @@ unimined.minecraft(fabric) {
 
 tasks.register<ShadowJar>("relocateFabricJar") {
     dependsOn("remapFabricJar")
-    from(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile)
+    from(zipTree(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile))
     archiveClassifier.set("fabric-relocated")
-    dependencies {
-        exclude("com/github/tatercertified/mixin/vanilla/**")
-    }
     relocate("com.github.tatercertified.vanilla", "com.github.tatercertified.y_intmdry")
 }
 
@@ -177,8 +174,9 @@ tasks.withType<ProcessResources> {
 }
 
 tasks.jar {
+    dependsOn("relocateFabricJar")
     from(
-        fabric.output,
+        zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
         forge.output,
         neoforge.output,
         paper.output,
