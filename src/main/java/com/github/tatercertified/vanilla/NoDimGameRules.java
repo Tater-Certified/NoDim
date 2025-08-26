@@ -7,6 +7,7 @@ package com.github.tatercertified.vanilla;
 import com.github.tatercertified.vanilla.mixin.v1_14.BooleanValueMojMixin;
 import com.github.tatercertified.vanilla.mixin.v1_16.GameRulesMojMixin;
 import com.github.tatercertified.vanilla.mixin.v1_16.GameRulesSRGMixin;
+import com.github.tatercertified.vanilla.util.LoaderUtil;
 import com.github.tatercertified.vanilla.util.MinecraftVersion;
 
 import net.minecraft.world.level.GameRules;
@@ -16,7 +17,7 @@ public final class NoDimGameRules {
     public static void registerGamerules() {
         String mcVer = MinecraftVersion.getVersion();
         if (MinecraftVersion.isNewerThan(mcVer, "1.15.2")) {
-            switch (MinecraftVersion.getMapping()) {
+            switch (LoaderUtil.getMappings()) {
                 case SRG -> {
                     NoDim.DISABLE_END =
                             GameRulesSRGMixin.register(
@@ -53,7 +54,7 @@ public final class NoDimGameRules {
                 }
             }
         } else {
-            switch (MinecraftVersion.getMapping()) {
+            switch (LoaderUtil.getMappings()) {
                 case SRG -> {
                     NoDim.DISABLE_END =
                             com.github.tatercertified.vanilla.mixin.v1_14.GameRulesSRGMixin

@@ -5,6 +5,7 @@
 package com.github.tatercertified.vanilla;
 
 import com.github.tatercertified.vanilla.annotation.MCVer;
+import com.github.tatercertified.vanilla.util.LoaderUtil;
 import com.github.tatercertified.vanilla.util.Mapping;
 import com.github.tatercertified.vanilla.util.MinecraftVersion;
 
@@ -48,7 +49,7 @@ public class NoDimMixinPlugin implements IMixinConfigPlugin {
                         com.github.tatercertified.vanilla.annotation.Map.class
                                 .descriptorString())) {
                     Mapping mapping = Mapping.fromString(((String[]) annotation.values.get(1))[1]);
-                    if (mapping != MinecraftVersion.getMapping()) {
+                    if (mapping != LoaderUtil.getMappings()) {
                         return false;
                     }
                 }

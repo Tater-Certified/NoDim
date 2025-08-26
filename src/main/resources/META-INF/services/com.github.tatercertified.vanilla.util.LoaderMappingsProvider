@@ -1,0 +1,5 @@
+com.github.tatercertified.sponge.SpongeMappingsProvider
+com.github.tatercertified.paper.PaperMappingsProvider
+com.github.tatercertified.neoforge.NeoForgeMappingsProvider
+com.github.tatercertified.forge.ForgeMappingsProvider
+com.github.tatercertified.fabric.FabricMappingsProvider
