@@ -17,7 +17,7 @@ public final class MinecraftVersion {
 
     public static String parseVersion() {
         URL url = ClassLoader.getSystemResource("version.json");
-        String version = "";
+        String version;
 
         try (Reader reader = new InputStreamReader(url.openStream())) {
             JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
@@ -37,10 +37,6 @@ public final class MinecraftVersion {
         }
 
         return cachedVersion;
-    }
-
-    public static boolean isBetween(String inputVer, String min, String max) {
-        return isBetween(getMinor(inputVer), getPatch(inputVer), min, max);
     }
 
     public static boolean isBetween(int inputMinor, int inputPatch, String min, String max) {
@@ -69,6 +65,7 @@ public final class MinecraftVersion {
         }
     }
 
+    /*
     public static boolean isNewerThan(String inputVer, String compare) {
         int minor = getMinor(inputVer);
         int compareMinor = getMinor(compare);
@@ -86,6 +83,7 @@ public final class MinecraftVersion {
             return false;
         }
     }
+     */
 
     public static int getMinor(String version) {
         String[] split = version.split("\\.");

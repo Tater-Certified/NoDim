@@ -11,8 +11,4 @@ public class NoDim {
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_END;
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_NETHER;
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_GATEWAY;
-
-    public static void init() {
-        NoDimGameRules.registerGamerules();
-    }
 }

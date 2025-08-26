@@ -11,7 +11,5 @@ import net.neoforged.fml.common.Mod;
 
 @Mod(NoDim.MOD_ID)
 public class NoDimNeoForge {
-    public NoDimNeoForge(IEventBus eventBus) {
-        NoDim.init();
-    }
+    public NoDimNeoForge(IEventBus eventBus) {}
 }

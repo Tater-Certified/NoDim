@@ -4,13 +4,9 @@
  */
 package com.github.tatercertified.fabric;
 
-import com.github.tatercertified.vanilla.NoDim;
-
 import net.fabricmc.api.ModInitializer;
 
 public class NoDimFabric implements ModInitializer {
     @Override
-    public void onInitialize() {
-        NoDim.init();
-    }
+    public void onInitialize() {}
 }

@@ -15,7 +15,5 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 public class NoDimSponge {
 
     @Inject
-    public NoDimSponge(Logger logger, PluginContainer pluginContainer) {
-        NoDim.init();
-    }
+    public NoDimSponge(Logger logger, PluginContainer pluginContainer) {}
 }

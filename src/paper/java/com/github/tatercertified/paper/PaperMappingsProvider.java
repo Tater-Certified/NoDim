@@ -6,8 +6,7 @@ package com.github.tatercertified.paper;
 
 import com.github.tatercertified.vanilla.util.LoaderMappingsProvider;
 import com.github.tatercertified.vanilla.util.Mapping;
-
-import io.papermc.paper.ServerBuildInfo;
+import com.github.tatercertified.vanilla.util.MinecraftVersion;
 
 public class PaperMappingsProvider implements LoaderMappingsProvider {
     @Override
@@ -17,6 +16,6 @@ public class PaperMappingsProvider implements LoaderMappingsProvider {
 
     @Override
     public String getMCVersion() {
-        return ServerBuildInfo.buildInfo().minecraftVersionName();
+        return MinecraftVersion.parseVersion();
     }
 }

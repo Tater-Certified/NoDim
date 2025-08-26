@@ -10,7 +10,5 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod(NoDim.MOD_ID)
 public class NoDimForge {
-    public NoDimForge() {
-        NoDim.init();
-    }
+    public NoDimForge() {}
 }
