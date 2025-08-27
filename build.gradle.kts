@@ -1,5 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
+import java.time.Instant
 
 plugins {
     id("java")
@@ -175,7 +176,6 @@ tasks.withType<ProcessResources> {
 tasks.jar {
     dependsOn("relocateFabricJar")
 
-    /*
     from(
         zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
         forge.output,
@@ -202,10 +202,8 @@ tasks.jar {
         )
     }
 
-    // TODO Figure out how to get the LICENSE into the jar
     from(listOf("README.md", "LICENSE")) {
         into("META-INF")
     }
-     */
 }
 tasks.build.get().dependsOn("spotlessApply")
