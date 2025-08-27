@@ -11,7 +11,7 @@ import com.github.tatercertified.vanilla.util.MinecraftVersion;
 public class FabricMappingsProvider implements LoaderMappingsProvider {
     @Override
     public Mapping getMappings() {
-        return Mapping.Mojmap;
+        return Mapping.Intermediary;
     }
 
     @Override

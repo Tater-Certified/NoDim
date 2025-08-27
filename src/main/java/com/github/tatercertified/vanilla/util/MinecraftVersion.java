@@ -4,6 +4,7 @@
  */
 package com.github.tatercertified.vanilla.util;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -20,8 +21,11 @@ public final class MinecraftVersion {
         String version;
 
         try (Reader reader = new InputStreamReader(url.openStream())) {
-            JsonObject obj = JsonParser.parseReader(reader).getAsJsonObject();
-            version = obj.get("id").getAsString();
+            // Using deprecated methods since Minecraft 1.14 uses an old Gson version
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(reader);
+            JsonObject obj = element.getAsJsonObject();
+            version = obj.get("name").getAsString();
         } catch (IOException e) {
             throw new RuntimeException("No Valid Minecraft Version Found");
         }
@@ -50,16 +54,12 @@ public final class MinecraftVersion {
             return false;
         }
 
-        if (inputMinor == maxMinor || inputMinor == minMinor) {
-
+        if (inputMinor == minMinor) {
             int minPatch = getPatch(min);
-            if (inputPatch < minPatch) {
-                return false;
-            }
-
+            return inputPatch >= minPatch;
+        } else if (inputMinor == maxMinor) {
             int maxPatch = getPatch(max);
             return inputPatch <= maxPatch;
-
         } else {
             return true;
         }

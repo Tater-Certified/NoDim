@@ -50,6 +50,7 @@ public class NoDimMixinPlugin implements IMixinConfigPlugin {
                                 .descriptorString())) {
                     Mapping mapping = Mapping.fromString(((String[]) annotation.values.get(1))[1]);
                     if (mapping != LoaderUtil.getMappings()) {
+                        System.out.println("Disabling " + s1 + " due to mappings incompatibility");
                         return false;
                     }
                 }
@@ -77,7 +78,7 @@ public class NoDimMixinPlugin implements IMixinConfigPlugin {
 
                     System.out.println("Testing " + s1 + ": " + minVer + " - " + maxVer);
                     if (!MinecraftVersion.isBetween(minor, patch, minVer, maxVer)) {
-                        System.out.println("Disabling " + s1);
+                        System.out.println("Disabling " + s1 + " due to version incompatibility");
                         return false;
                     }
                 }

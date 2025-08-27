@@ -5,6 +5,7 @@
 package com.github.tatercertified.vanilla.util;
 
 public enum Mapping {
+    Intermediary,
     Mojmap,
     SRG,
     Spigot;

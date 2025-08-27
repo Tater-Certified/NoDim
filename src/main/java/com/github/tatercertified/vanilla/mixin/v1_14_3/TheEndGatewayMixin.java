@@ -2,7 +2,7 @@
  * Copyright (c) 2025 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/NoDim/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin.v1_14;
+package com.github.tatercertified.vanilla.mixin.v1_14_3;
 
 import com.github.tatercertified.vanilla.NoDim;
 import com.github.tatercertified.vanilla.annotation.MCVer;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@MCVer(min = "1.14", max = "1.16.5")
+@MCVer(min = "1.14.3", max = "1.16.5")
 @Mixin(TheEndGatewayBlockEntity.class)
 public class TheEndGatewayMixin {
     @Inject(

@@ -6,7 +6,7 @@ package com.github.tatercertified.vanilla.mixin.v1_16;
 
 import com.github.tatercertified.vanilla.NoDim;
 import com.github.tatercertified.vanilla.annotation.MCVer;
-import com.github.tatercertified.vanilla.mixin.v1_14.BooleanValueMojMixin;
+import com.github.tatercertified.vanilla.mixin.v1_14_3.BooleanValueMixin;
 
 import net.minecraft.world.level.GameRules;
 
@@ -29,22 +29,16 @@ public abstract class GameRuleRegistrationMixin {
             method = "<clinit>",
             at =
                     @At(
-                            value = "INVOKE",
+                            value = "FIELD",
                             target =
-                                    "Lnet/minecraft/world/level/GameRules;register(Ljava/lang/String;Lnet/minecraft/world/level/GameRules$Category;Lnet/minecraft/world/level/GameRules$Type;)Lnet/minecraft/world/level/GameRules$Key;",
-                            ordinal = 0))
+                                    "Lnet/minecraft/world/level/GameRules;RULE_DOFIRETICK:Lnet/minecraft/world/level/GameRules$Key;"))
     private static void nodim$registerGameRules(CallbackInfo ci) {
         NoDim.DISABLE_END =
-                register("disableEnd", GameRules.Category.MISC, BooleanValueMojMixin.create(false));
+                register("disableEnd", GameRules.Category.MISC, BooleanValueMixin.create(false));
         NoDim.DISABLE_GATEWAY =
                 register(
-                        "disableGateway",
-                        GameRules.Category.MISC,
-                        BooleanValueMojMixin.create(false));
+                        "disableGateway", GameRules.Category.MISC, BooleanValueMixin.create(false));
         NoDim.DISABLE_NETHER =
-                register(
-                        "disableNether",
-                        GameRules.Category.MISC,
-                        BooleanValueMojMixin.create(false));
+                register("disableNether", GameRules.Category.MISC, BooleanValueMixin.create(false));
     }
 }
