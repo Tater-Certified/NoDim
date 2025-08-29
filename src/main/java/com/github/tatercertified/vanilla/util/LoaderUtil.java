@@ -24,7 +24,8 @@ public class LoaderUtil {
     }
 
     public static LoaderMappingsProvider getLoader() {
-        if (checkForClass("io.papermc.paperclip.Paperclip") || checkForClass("org.spigotmc.CustomTimingsHandler")) {
+        if (checkForClass("io.papermc.paperclip.Paperclip")
+                || checkForClass("org.spigotmc.CustomTimingsHandler")) {
             return new LoaderMappingsProvider() {
                 @Override
                 public Mapping getMappings() {
