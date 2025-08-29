@@ -7,6 +7,7 @@ package com.github.tatercertified.vanilla;
 import net.minecraft.world.level.GameRules;
 
 public class NoDim {
+    public static final boolean DEBUG = false;
     public static final String MOD_ID = "nodim";
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_END;
     public static GameRules.Key<GameRules.BooleanValue> DISABLE_NETHER;

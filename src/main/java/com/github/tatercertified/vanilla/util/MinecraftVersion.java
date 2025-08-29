@@ -56,13 +56,17 @@ public final class MinecraftVersion {
 
         if (inputMinor == minMinor) {
             int minPatch = getPatch(min);
-            return inputPatch >= minPatch;
-        } else if (inputMinor == maxMinor) {
+            if (inputPatch < minPatch) {
+                return false;
+            }
+        }
+
+        if (inputMinor == maxMinor) {
             int maxPatch = getPatch(max);
             return inputPatch <= maxPatch;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /*
