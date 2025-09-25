@@ -49,7 +49,7 @@ public class NoDimMixinPlugin implements IMixinConfigPlugin {
                         com.github.tatercertified.vanilla.annotation.Map.class
                                 .descriptorString())) {
                     Mapping mapping = Mapping.fromString(((String[]) annotation.values.get(1))[1]);
-                    if (mapping != LoaderUtil.getMappings()) {
+                    if (mapping != LoaderUtil.MAPPINGS) {
                         if (NoDim.DEBUG) {
                             System.out.println(
                                     "Disabling " + s1 + " due to mappings incompatibility");

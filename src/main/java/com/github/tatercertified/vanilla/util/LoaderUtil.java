@@ -6,100 +6,23 @@ package com.github.tatercertified.vanilla.util;
 
 import org.spongepowered.asm.service.MixinService;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class LoaderUtil {
-    private static final LoaderMappingsProvider PROVIDER = getLoader();
+    public static final Mapping MAPPINGS = getMappings();
 
-    public static Mapping getMappings() {
-        return PROVIDER.getMappings();
-    }
-
-    public static String getMCVersion() {
-        return PROVIDER.getMCVersion();
-    }
-
-    public static LoaderMappingsProvider getLoader() {
+    private static Mapping getMappings() {
         if (checkForClass("io.papermc.paperclip.Paperclip")
                 || checkForClass("org.spigotmc.CustomTimingsHandler")) {
-            return new LoaderMappingsProvider() {
-                @Override
-                public Mapping getMappings() {
-                    return Mapping.Mojmap;
-                }
-
-                @Override
-                public String getMCVersion() {
-                    return MinecraftVersion.parseVersion();
-                }
-            };
+            return Mapping.Mojmap;
         } else if (checkForClass("net.fabricmc.loader.api.FabricLoader")
                 || checkForClass("net.quiltservertools.quilt.api.QuiltServer")) {
-            return new LoaderMappingsProvider() {
-                @Override
-                public Mapping getMappings() {
-                    return Mapping.Intermediary;
-                }
-
-                @Override
-                public String getMCVersion() {
-                    return MinecraftVersion.parseVersion();
-                }
-            };
+            return Mapping.Intermediary;
         } else if (checkForClass("net.neoforged.neoforge.common.NeoForge")
                 || checkForClass("net.minecraftforge.fml.loading.FMLLoader")) {
-            return new LoaderMappingsProvider() {
-                @Override
-                public Mapping getMappings() {
-                    return Mapping.SRG;
-                }
-
-                @Override
-                public String getMCVersion() {
-                    return MinecraftVersion.parseVersion();
-                }
-            };
+            return Mapping.SRG;
         } else if (checkForClass("org.spongepowered.api.Sponge")) {
-            return new LoaderMappingsProvider() {
-                @Override
-                public Mapping getMappings() {
-                    return Mapping.Mojmap;
-                }
-
-                @Override
-                public String getMCVersion() {
-                    try {
-                        URL location =
-                                this.getClass().getProtectionDomain().getCodeSource().getLocation();
-
-                        String jarPathString =
-                                location.toURI().getSchemeSpecificPart().replace("file:///", "");
-                        jarPathString = jarPathString.substring(0, jarPathString.lastIndexOf('!'));
-
-                        Path jarPath = Paths.get(jarPathString);
-
-                        Path targetPath =
-                                jarPath.getParent()
-                                        .getParent()
-                                        .getParent()
-                                        .resolve("libraries/net/minecraft");
-
-                        for (File file : targetPath.toFile().listFiles()) {
-                            if (!"mappings".equals(file.getName())) {
-                                return file.getName();
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        throw new RuntimeException("Failed to get Minecraft Version from Sponge");
-                    }
-                    return null;
-                }
-            };
+            return Mapping.Mojmap;
         } else {
             throw new RuntimeException("Unknown loader detected; Failing to load NoDim");
         }

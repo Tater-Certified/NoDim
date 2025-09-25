@@ -4,40 +4,19 @@
  */
 package com.github.tatercertified.vanilla.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.*;
+import org.spongepowered.asm.service.MixinService;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
 
 public final class MinecraftVersion {
     private static String cachedVersion;
 
-    public static String parseVersion() {
-        URL url = ClassLoader.getSystemResource("version.json");
-        String version;
-
-        try (Reader reader = new InputStreamReader(url.openStream())) {
-            // Using deprecated methods since Minecraft 1.14 uses an old Gson version
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(reader);
-            JsonObject obj = element.getAsJsonObject();
-            version = obj.get("name").getAsString();
-        } catch (IOException e) {
-            throw new RuntimeException("No Valid Minecraft Version Found");
-        }
-
-        return version;
-    }
-
     public static String getVersion() {
-        if (cachedVersion != null) {
-            return cachedVersion;
-        } else {
-            cachedVersion = LoaderUtil.getMCVersion();
+        if (cachedVersion == null) {
+            cachedVersion = getMinecraftVersion();
+            System.out.print("VERSION: " + cachedVersion);
         }
 
         return cachedVersion;
@@ -69,26 +48,6 @@ public final class MinecraftVersion {
         return true;
     }
 
-    /*
-    public static boolean isNewerThan(String inputVer, String compare) {
-        int minor = getMinor(inputVer);
-        int compareMinor = getMinor(compare);
-
-        if (minor > compareMinor) {
-            return true;
-
-        } else if (minor == compareMinor) {
-            int patch = getPatch(inputVer);
-            int comparePatch = getPatch(compare);
-
-            return patch > comparePatch;
-
-        } else {
-            return false;
-        }
-    }
-     */
-
     public static int getMinor(String version) {
         String[] split = version.split("\\.");
         return Integer.parseInt(split[1]);
@@ -101,5 +60,127 @@ public final class MinecraftVersion {
         } else {
             return 0;
         }
+    }
+
+    public static String getMinecraftVersion() {
+        String version;
+
+        // Try 1.17=<
+        try {
+            version =
+                    switch (LoaderUtil.MAPPINGS) {
+                        case Intermediary -> {
+                            ClassNode node =
+                                    MixinService.getService()
+                                            .getBytecodeProvider()
+                                            .getClassNode("net.minecraft.class_155");
+                            yield getStaticStringValue(node, "field_29733");
+                        }
+                        case Mojmap, Spigot -> {
+                            ClassNode node =
+                                    MixinService.getService()
+                                            .getBytecodeProvider()
+                                            .getClassNode("net.minecraft.SharedConstants");
+                            yield getStaticStringValue(node, "VERSION_STRING");
+                        }
+                        case SRG -> {
+                            ClassNode node =
+                                    MixinService.getService()
+                                            .getBytecodeProvider()
+                                            .getClassNode("net.minecraft.src.C_5285_");
+                            yield getStaticStringValue(node, "f_142952_");
+                        }
+                    };
+        } catch (ClassNotFoundException | IOException e) {
+            // Try again
+            try {
+                ClassNode node =
+                        MixinService.getService()
+                                .getBytecodeProvider()
+                                .getClassNode("net.minecraft.SharedConstants");
+                version = getStaticStringValue(node, "VERSION_STRING");
+            } catch (IOException | ClassNotFoundException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // Try <1.17
+        if (version == null) {
+            try {
+                version =
+                        switch (LoaderUtil.MAPPINGS) {
+                            // Try 1.17=<
+                            case Intermediary -> {
+                                ClassNode node =
+                                        MixinService.getService()
+                                                .getBytecodeProvider()
+                                                .getClassNode("net.minecraft.class_3797");
+                                yield getAssignedStringToField(node, "<init>", "field_16733");
+                            }
+                            case Mojmap, Spigot -> {
+                                ClassNode node =
+                                        MixinService.getService()
+                                                .getBytecodeProvider()
+                                                .getClassNode("net.minecraft.DetectedVersion");
+                                yield getAssignedStringToField(node, "<init>", "name");
+                            }
+                            case SRG -> {
+                                ClassNode node =
+                                        MixinService.getService()
+                                                .getBytecodeProvider()
+                                                .getClassNode(
+                                                        "net.minecraft.util.MinecraftVersion");
+                                yield getAssignedStringToField(node, "<init>", "field_214960_c");
+                            }
+                        };
+            } catch (ClassNotFoundException | IOException e) {
+                // Try again
+                try {
+                    ClassNode node =
+                            MixinService.getService()
+                                    .getBytecodeProvider()
+                                    .getClassNode("net.minecraft.DetectedVersion");
+                    version = getAssignedStringToField(node, "<init>", "name");
+                } catch (ClassNotFoundException | IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        }
+        return version;
+    }
+
+    private static String getStaticStringValue(ClassNode classNode, String fieldName) {
+        for (FieldNode field : classNode.fields) {
+            if (field.name.equals(fieldName) && field.desc.equals("Ljava/lang/String;")) {
+                return (String) field.value;
+            }
+        }
+        return null;
+    }
+
+    private static String getAssignedStringToField(
+            ClassNode classNode, String methodName, String fieldName) {
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals(methodName)) {
+                AbstractInsnNode insn = method.instructions.getFirst();
+                while (insn != null) {
+                    if (insn.getOpcode() == Opcodes.PUTFIELD) {
+                        FieldInsnNode fieldInsn = (FieldInsnNode) insn;
+                        if (fieldInsn.name.equals(fieldName)
+                                && fieldInsn.desc.equals("Ljava/lang/String;")) {
+                            AbstractInsnNode prev = fieldInsn.getPrevious();
+                            if (prev.getOpcode() == Opcodes.LDC) {
+                                LdcInsnNode ldc = (LdcInsnNode) prev;
+                                if (ldc.cst instanceof String) {
+                                    return (String) ldc.cst;
+                                }
+                            }
+                        }
+                    }
+                    insn = insn.getNext();
+                }
+            }
+        }
+        return null;
     }
 }
