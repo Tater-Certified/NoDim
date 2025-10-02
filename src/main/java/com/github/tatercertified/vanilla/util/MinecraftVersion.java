@@ -9,13 +9,14 @@ import org.objectweb.asm.tree.*;
 import org.spongepowered.asm.service.MixinService;
 
 import java.io.IOException;
+import java.util.Set;
 
 public final class MinecraftVersion {
     private static String cachedVersion;
 
     public static String getVersion() {
         if (cachedVersion == null) {
-            cachedVersion = getMinecraftVersion();
+            cachedVersion = getMinecraftVersion(false);
             System.out.print("VERSION: " + cachedVersion);
         }
 
@@ -62,91 +63,72 @@ public final class MinecraftVersion {
         }
     }
 
-    public static String getMinecraftVersion() {
-        String version;
+    public static String getMinecraftVersion(boolean old) {
+        // <1.17
+        if (old) {
+            final Set<String> oldClassMappings =
+                    Set.of(
+                            "net.minecraft.class_3797",
+                            "net.minecraft.DetectedVersion",
+                            "net.minecraft.util.MinecraftVersion");
+            final Set<String> oldFieldMappings = Set.of("field_16733", "name", "field_214960_c");
 
-        // Try 1.17=<
-        try {
-            version =
-                    switch (LoaderUtil.MAPPINGS) {
-                        case Intermediary -> {
-                            ClassNode node =
-                                    MixinService.getService()
-                                            .getBytecodeProvider()
-                                            .getClassNode("net.minecraft.class_155");
-                            yield getStaticStringValue(node, "field_29733");
-                        }
-                        case Mojmap, Spigot -> {
-                            ClassNode node =
-                                    MixinService.getService()
-                                            .getBytecodeProvider()
-                                            .getClassNode("net.minecraft.SharedConstants");
-                            yield getStaticStringValue(node, "VERSION_STRING");
-                        }
-                        case SRG -> {
-                            ClassNode node =
-                                    MixinService.getService()
-                                            .getBytecodeProvider()
-                                            .getClassNode("net.minecraft.src.C_5285_");
-                            yield getStaticStringValue(node, "f_142952_");
-                        }
-                    };
-        } catch (ClassNotFoundException | IOException e) {
-            // Try again
-            try {
-                ClassNode node =
-                        MixinService.getService()
-                                .getBytecodeProvider()
-                                .getClassNode("net.minecraft.SharedConstants");
-                version = getStaticStringValue(node, "VERSION_STRING");
-            } catch (IOException | ClassNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-
-        // Try <1.17
-        if (version == null) {
-            try {
-                version =
-                        switch (LoaderUtil.MAPPINGS) {
-                            // Try 1.17=<
-                            case Intermediary -> {
-                                ClassNode node =
-                                        MixinService.getService()
-                                                .getBytecodeProvider()
-                                                .getClassNode("net.minecraft.class_3797");
-                                yield getAssignedStringToField(node, "<init>", "field_16733");
-                            }
-                            case Mojmap, Spigot -> {
-                                ClassNode node =
-                                        MixinService.getService()
-                                                .getBytecodeProvider()
-                                                .getClassNode("net.minecraft.DetectedVersion");
-                                yield getAssignedStringToField(node, "<init>", "name");
-                            }
-                            case SRG -> {
-                                ClassNode node =
-                                        MixinService.getService()
-                                                .getBytecodeProvider()
-                                                .getClassNode(
-                                                        "net.minecraft.util.MinecraftVersion");
-                                yield getAssignedStringToField(node, "<init>", "field_214960_c");
-                            }
-                        };
-            } catch (ClassNotFoundException | IOException e) {
-                // Try again
+            // Try classes
+            for (String classMapping : oldClassMappings) {
+                ClassNode node;
                 try {
-                    ClassNode node =
+                    node =
                             MixinService.getService()
                                     .getBytecodeProvider()
-                                    .getClassNode("net.minecraft.DetectedVersion");
-                    version = getAssignedStringToField(node, "<init>", "name");
-                } catch (ClassNotFoundException | IOException ex) {
-                    throw new RuntimeException(ex);
+                                    .getClassNode(classMapping);
+                } catch (IOException | ClassNotFoundException e) {
+                    continue;
+                }
+
+                // Try fields
+                for (String fieldMapping : oldFieldMappings) {
+                    String result = getAssignedConstructorStringToField(node, fieldMapping);
+                    if (result != null) {
+                        return result;
+                    }
                 }
             }
+
+            // Failed to find a valid version
+            throw new RuntimeException("Failed to locate Minecraft Version");
+        } else { // >= 1.17
+            final Set<String> newClassMappings =
+                    Set.of(
+                            "net.minecraft.class_155",
+                            "net.minecraft.SharedConstants",
+                            "net.minecraft.src.C_5285_");
+            final Set<String> newFieldMappings =
+                    Set.of("field_29733", "VERSION_STRING", "f_142952_");
+
+            // Try classes
+            for (String classMapping : newClassMappings) {
+                ClassNode node;
+                try {
+                    node =
+                            MixinService.getService()
+                                    .getBytecodeProvider()
+                                    .getClassNode(classMapping);
+                } catch (IOException | ClassNotFoundException e) {
+                    continue;
+                }
+
+                // Try fields
+                for (String fieldMapping : newFieldMappings) {
+                    String result = getStaticStringValue(node, fieldMapping);
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+
+            // Failed to find a valid version; Trying older MC versions
+            return getMinecraftVersion(true);
         }
-        return version;
     }
 
     private static String getStaticStringValue(ClassNode classNode, String fieldName) {
@@ -158,10 +140,10 @@ public final class MinecraftVersion {
         return null;
     }
 
-    private static String getAssignedStringToField(
-            ClassNode classNode, String methodName, String fieldName) {
+    private static String getAssignedConstructorStringToField(
+            ClassNode classNode, String fieldName) {
         for (MethodNode method : classNode.methods) {
-            if (method.name.equals(methodName)) {
+            if (method.name.equals("<init>")) {
                 AbstractInsnNode insn = method.instructions.getFirst();
                 while (insn != null) {
                     if (insn.getOpcode() == Opcodes.PUTFIELD) {
