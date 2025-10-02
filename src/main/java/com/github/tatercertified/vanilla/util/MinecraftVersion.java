@@ -101,7 +101,7 @@ public final class MinecraftVersion {
                     Set.of(
                             "net.minecraft.class_155",
                             "net.minecraft.SharedConstants",
-                            "net.minecraft.src.C_5285_");
+                            "net.minecraft.util.SharedConstants");
             final Set<String> newFieldMappings =
                     Set.of("field_29733", "VERSION_STRING", "f_142952_");
 
