@@ -4,20 +4,22 @@
  */
 package com.github.tatercertified.vanilla.util;
 
-import org.objectweb.asm.Opcodes;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.mojang.math.MethodsReturnNonnullByDefault;
+
 import org.objectweb.asm.tree.*;
-import org.spongepowered.asm.service.MixinService;
 
 import java.io.IOException;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public final class MinecraftVersion {
     private static String cachedVersion;
 
     public static String getVersion() {
         if (cachedVersion == null) {
-            cachedVersion = getMinecraftVersion(false);
-            System.out.print("VERSION: " + cachedVersion);
+            cachedVersion = getMinecraftVersion();
         }
 
         return cachedVersion;
@@ -63,106 +65,26 @@ public final class MinecraftVersion {
         }
     }
 
-    public static String getMinecraftVersion(boolean old) {
-        // <1.17
-        if (old) {
-            final Set<String> oldClassMappings =
-                    Set.of(
-                            "net.minecraft.class_3797",
-                            "net.minecraft.DetectedVersion",
-                            "net.minecraft.util.MinecraftVersion");
-            final Set<String> oldFieldMappings = Set.of("field_16733", "name", "field_214960_c");
-
-            // Try classes
-            for (String classMapping : oldClassMappings) {
-                ClassNode node;
-                try {
-                    node =
-                            MixinService.getService()
-                                    .getBytecodeProvider()
-                                    .getClassNode(classMapping);
-                } catch (IOException | ClassNotFoundException e) {
-                    continue;
+    private static String getMinecraftVersion() {
+        try {
+            SerializedMCVer ver;
+            // Only load a useless class
+            try (InputStream inputStream =
+                    MethodsReturnNonnullByDefault.class.getResourceAsStream("/version.json")) {
+                if (inputStream == null) {
+                    // Failed to find a valid version
+                    throw new RuntimeException("Failed to locate Minecraft Version");
                 }
 
-                // Try fields
-                for (String fieldMapping : oldFieldMappings) {
-                    String result = getAssignedConstructorStringToField(node, fieldMapping);
-                    if (result != null) {
-                        return result;
-                    }
+                try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
+                    Gson gson = new Gson();
+                    ver = gson.fromJson(inputStreamReader, SerializedMCVer.class);
                 }
             }
 
-            // Failed to find a valid version
-            throw new RuntimeException("Failed to locate Minecraft Version");
-        } else { // >= 1.17
-            final Set<String> newClassMappings =
-                    Set.of(
-                            "net.minecraft.class_155",
-                            "net.minecraft.SharedConstants",
-                            "net.minecraft.util.SharedConstants");
-            final Set<String> newFieldMappings =
-                    Set.of("field_29733", "VERSION_STRING", "f_142952_");
-
-            // Try classes
-            for (String classMapping : newClassMappings) {
-                ClassNode node;
-                try {
-                    node =
-                            MixinService.getService()
-                                    .getBytecodeProvider()
-                                    .getClassNode(classMapping);
-                } catch (IOException | ClassNotFoundException e) {
-                    continue;
-                }
-
-                // Try fields
-                for (String fieldMapping : newFieldMappings) {
-                    String result = getStaticStringValue(node, fieldMapping);
-                    if (result != null) {
-                        return result;
-                    }
-                }
-            }
-
-            // Failed to find a valid version; Trying older MC versions
-            return getMinecraftVersion(true);
+            return ver.id();
+        } catch (JsonParseException | IOException exception) {
+            throw new IllegalStateException("Game version information is corrupt", exception);
         }
-    }
-
-    private static String getStaticStringValue(ClassNode classNode, String fieldName) {
-        for (FieldNode field : classNode.fields) {
-            if (field.name.equals(fieldName) && field.desc.equals("Ljava/lang/String;")) {
-                return (String) field.value;
-            }
-        }
-        return null;
-    }
-
-    private static String getAssignedConstructorStringToField(
-            ClassNode classNode, String fieldName) {
-        for (MethodNode method : classNode.methods) {
-            if (method.name.equals("<init>")) {
-                AbstractInsnNode insn = method.instructions.getFirst();
-                while (insn != null) {
-                    if (insn.getOpcode() == Opcodes.PUTFIELD) {
-                        FieldInsnNode fieldInsn = (FieldInsnNode) insn;
-                        if (fieldInsn.name.equals(fieldName)
-                                && fieldInsn.desc.equals("Ljava/lang/String;")) {
-                            AbstractInsnNode prev = fieldInsn.getPrevious();
-                            if (prev.getOpcode() == Opcodes.LDC) {
-                                LdcInsnNode ldc = (LdcInsnNode) prev;
-                                if (ldc.cst instanceof String) {
-                                    return (String) ldc.cst;
-                                }
-                            }
-                        }
-                    }
-                    insn = insn.getNext();
-                }
-            }
-        }
-        return null;
     }
 }
