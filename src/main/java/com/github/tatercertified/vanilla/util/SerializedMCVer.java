@@ -4,4 +4,10 @@
  */
 package com.github.tatercertified.vanilla.util;
 
-public record SerializedMCVer(String id) {}
+public class SerializedMCVer {
+    private String id;
+
+    public String getId() {
+        return this.id;
+    }
+}

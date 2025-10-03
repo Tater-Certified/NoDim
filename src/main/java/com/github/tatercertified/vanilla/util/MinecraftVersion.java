@@ -7,7 +7,8 @@ package com.github.tatercertified.vanilla.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
-import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.Position;
+
 import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
@@ -69,8 +70,7 @@ public final class MinecraftVersion {
         try {
             SerializedMCVer ver;
             // Only load a useless class
-            try (InputStream inputStream =
-                    MethodsReturnNonnullByDefault.class.getResourceAsStream("/version.json")) {
+            try (InputStream inputStream = Position.class.getResourceAsStream("/version.json")) {
                 if (inputStream == null) {
                     // Failed to find a valid version
                     throw new RuntimeException("Failed to locate Minecraft Version");
@@ -82,7 +82,7 @@ public final class MinecraftVersion {
                 }
             }
 
-            return ver.id();
+            return ver.getId();
         } catch (JsonParseException | IOException exception) {
             throw new IllegalStateException("Game version information is corrupt", exception);
         }
