@@ -6,8 +6,8 @@ package com.github.tatercertified.vanilla.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.mojang.math.MethodsReturnNonnullByDefault;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
