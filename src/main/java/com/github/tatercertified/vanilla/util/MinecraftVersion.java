@@ -4,40 +4,23 @@
  */
 package com.github.tatercertified.vanilla.util;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+
+import net.minecraft.core.Position;
+
+import org.objectweb.asm.tree.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
 
 public final class MinecraftVersion {
     private static String cachedVersion;
 
-    public static String parseVersion() {
-        URL url = ClassLoader.getSystemResource("version.json");
-        String version;
-
-        try (Reader reader = new InputStreamReader(url.openStream())) {
-            // Using deprecated methods since Minecraft 1.14 uses an old Gson version
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(reader);
-            JsonObject obj = element.getAsJsonObject();
-            version = obj.get("name").getAsString();
-        } catch (IOException e) {
-            throw new RuntimeException("No Valid Minecraft Version Found");
-        }
-
-        return version;
-    }
-
     public static String getVersion() {
-        if (cachedVersion != null) {
-            return cachedVersion;
-        } else {
-            cachedVersion = LoaderUtil.getMCVersion();
+        if (cachedVersion == null) {
+            cachedVersion = getMinecraftVersion();
         }
 
         return cachedVersion;
@@ -69,26 +52,6 @@ public final class MinecraftVersion {
         return true;
     }
 
-    /*
-    public static boolean isNewerThan(String inputVer, String compare) {
-        int minor = getMinor(inputVer);
-        int compareMinor = getMinor(compare);
-
-        if (minor > compareMinor) {
-            return true;
-
-        } else if (minor == compareMinor) {
-            int patch = getPatch(inputVer);
-            int comparePatch = getPatch(compare);
-
-            return patch > comparePatch;
-
-        } else {
-            return false;
-        }
-    }
-     */
-
     public static int getMinor(String version) {
         String[] split = version.split("\\.");
         return Integer.parseInt(split[1]);
@@ -100,6 +63,28 @@ public final class MinecraftVersion {
             return Integer.parseInt(split[2]);
         } else {
             return 0;
+        }
+    }
+
+    private static String getMinecraftVersion() {
+        try {
+            SerializedMCVer ver;
+            // Only load a useless class
+            try (InputStream inputStream = Position.class.getResourceAsStream("/version.json")) {
+                if (inputStream == null) {
+                    // Failed to find a valid version
+                    throw new RuntimeException("Failed to locate Minecraft Version");
+                }
+
+                try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
+                    Gson gson = new Gson();
+                    ver = gson.fromJson(inputStreamReader, SerializedMCVer.class);
+                }
+            }
+
+            return ver.getId();
+        } catch (JsonParseException | IOException exception) {
+            throw new IllegalStateException("Game version information is corrupt", exception);
         }
     }
 }

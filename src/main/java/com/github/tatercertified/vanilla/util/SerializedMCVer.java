@@ -4,8 +4,10 @@
  */
 package com.github.tatercertified.vanilla.util;
 
-public interface LoaderMappingsProvider {
-    Mapping getMappings();
+public class SerializedMCVer {
+    private String id;
 
-    String getMCVersion();
+    public String getId() {
+        return this.id;
+    }
 }
