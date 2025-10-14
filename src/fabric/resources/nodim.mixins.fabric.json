@@ -20,7 +20,10 @@
     "v1_21.GatewayPortalMixin",
     "v1_21_5.EndPortalMixin",
     "v1_21_5.GatewayPortalMixin",
-    "v1_21_5.NetherPortalMixin"
+    "v1_21_5.NetherPortalMixin",
+    "v1_21_10.EndPortalMixin",
+    "v1_21_10.GatewayPortalMixin",
+    "v1_21_10.NetherPortalMixin"
   ],
   "client": [],
   "server": []
