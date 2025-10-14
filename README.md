@@ -12,11 +12,11 @@ The mod includes the following gamerules to disable access to certain dimensions
 - `/gamerule disableGateway <bool>`: Disables the End Gateway Portals
 
 # Supported Platforms (As of v1.1.0)
-- Fabric/Quilt (1.14.3 - 1.21.8)
-- Forge (1.14.3 - 1.21.8)
-- NeoForge (1.14.3 - 1.21.8)
-- PaperMC/Spigot/Folia (1.14.3 - 1.21.8)
-- Sponge (1.14.3 - 1.21.8)
+- Fabric/Quilt (1.14.3 - 1.21.10)
+- Forge (1.14.3 - 1.21.10)
+- NeoForge (1.14.3 - 1.21.10)
+- PaperMC/Spigot/Folia (1.14.3 - 1.21.10)
+- Sponge (1.14.3 - 1.21.10)
 
 # Installation
 ## Fabric, Quilt, Forge, NeoForge
