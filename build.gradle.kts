@@ -84,7 +84,6 @@ tasks.withType<RemapJarTask> {
 }
 
 repositories {
-    // maven("https://maven.neuralnexus.dev/mirror")
     mavenCentral()
     unimined.fabricMaven()
     unimined.minecraftForgeMaven()

@@ -2,41 +2,41 @@
  * Copyright (c) 2025 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/NoDim/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin.v1_17;
+package com.github.tatercertified.vanilla.mixin;
 
 import com.github.tatercertified.vanilla.NoDim;
-import com.github.tatercertified.vanilla.annotation.MCVer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
+import net.minecraft.world.level.block.EndPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@MCVer(min = "1.17", max = "1.20.6")
-@Mixin(TheEndGatewayBlockEntity.class)
-public class TheGatewayPortalMixin {
+@Mixin(EndPortalBlock.class)
+public class EndPortalMixin {
     @Inject(
             method = {
-                "teleportTick", // Mojmap
-                "method_31702", // Intermediary
-                "m_155844_" // SRG
+                "entityInside(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/InsideBlockEffectApplier;Z)V"
             },
             at = @At("HEAD"),
             cancellable = true)
-    private static void nodim$checkIfGatewayIsEnabled(
+    private void nodim$checkIfEndIsEnabled(
+            BlockState blockState,
             Level level,
-            BlockPos pos,
-            BlockState state,
-            TheEndGatewayBlockEntity blockEntity,
+            BlockPos blockPos,
+            Entity entity,
+            @Coerce Object insideBlockEffectApplier,
+            boolean bl,
             CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
+                && serverWorld.getGameRules().get(NoDim.DISABLE_END)) {
             ci.cancel();
         }
     }
