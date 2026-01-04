@@ -5,7 +5,6 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "com.github.tatercertified.y_intmdry.NoDimMixinPlugin",
   "package": "com.github.tatercertified.y_intmdry.mixin",
   "mixins": [
     "GameRuleRegistrationMixin",

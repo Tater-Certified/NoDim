@@ -90,6 +90,7 @@ repositories {
     unimined.neoForgedMaven()
     unimined.parchmentMaven()
     unimined.spongeMaven()
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 unimined.minecraft {
