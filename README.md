@@ -11,6 +11,8 @@ The mod includes the following gamerules to disable access to certain dimensions
 - `/gamerule disableNether <bool>`: Disables the Nether Portal
 - `/gamerule disableGateway <bool>`: Disables the End Gateway Portals
 
+**Note:** In 1.21.11 and later, the gamerule names have slight changed. The capital letters have been replaced with a "_" and the lowercase letter. Ex: `/gamerule disable_end <bool>`
+
 # Supported Platforms (As of v1.1.0)
 - Fabric/Quilt (1.14.3 - 1.21.10)
 - Forge (1.14.3 - 1.21.10)
