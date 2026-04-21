@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import xyz.wagyourtail.unimined.api.minecraft.task.RemapJarTask
 import java.time.Instant
 
@@ -33,10 +32,6 @@ spotless {
         importOrder()
         removeUnusedImports()
         cleanthat()
-        googleJavaFormat("1.24.0")
-            .aosp()
-            .formatJavadoc(true)
-            .reorderImports(true)
         formatAnnotations()
         trimTrailingWhitespace()
         leadingTabsToSpaces()
@@ -67,10 +62,6 @@ val paperCompileOnly: Configuration by configurations.getting {
 val spongeCompileOnly: Configuration by configurations.getting {
     extendsFrom(mainCompileOnly)
 }
-val modImplementation: Configuration by configurations.creating
-val fabricModImplementation: Configuration by configurations.creating {
-    extendsFrom(modImplementation)
-}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
@@ -88,71 +79,54 @@ repositories {
     unimined.fabricMaven()
     unimined.minecraftForgeMaven()
     unimined.neoForgedMaven()
-    unimined.parchmentMaven()
     unimined.spongeMaven()
     maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 unimined.minecraft {
     version(minecraftVersion)
-    mappings {
-        parchment(parchmentMinecraft, parchmentVersion)
-        mojmap()
-        devFallbackNamespace("official")
-    }
     defaultRemapJar = false
 }
 
 unimined.minecraft(fabric) {
     combineWith(sourceSets.main.get())
-    fabric {
-        loader(fabricLoaderVersion)
-    }
-    defaultRemapJar = true
-}
-
-tasks.register<ShadowJar>("relocateFabricJar") {
-    dependsOn("remapFabricJar")
-    from(zipTree(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile))
-    archiveClassifier.set("fabric-relocated")
-    relocate("com.github.tatercertified.vanilla", "com.github.tatercertified.y_intmdry")
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(forge) {
     combineWith(sourceSets.main.get())
-    minecraftForge {
-        loader(forgeVersion)
-    }
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(neoforge) {
     combineWith(sourceSets.main.get())
-    neoForge {
-        loader(neoForgeVersion)
-    }
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 unimined.minecraft(paper) {
     combineWith(sourceSets.main.get())
+    version(minecraftVersion)
     accessTransformer {
         // https://github.com/PaperMC/Paper/blob/main/build-data/paper.at
         accessTransformer("${rootProject.projectDir}/src/paper/paper.at")
     }
-    defaultRemapJar = true
+    defaultRemapJar = false
 }
 
 unimined.minecraft(sponge) {
     combineWith(sourceSets.main.get())
-    defaultRemapJar = true
+    version(minecraftVersion)
+    defaultRemapJar = false
 }
 
 dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")
+    paperCompileOnly("io.papermc.paper:paper-api:$paperVersion")
     paperCompileOnly(libs.ignite.api)
     spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
 }
@@ -173,10 +147,8 @@ tasks.withType<ProcessResources> {
 }
 
 tasks.jar {
-    dependsOn("relocateFabricJar")
-
     from(
-        zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
+        fabric.output,
         forge.output,
         neoforge.output,
         paper.output,

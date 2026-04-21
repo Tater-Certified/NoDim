@@ -1,12 +1,12 @@
 [versions]
-spotless = "8.0.0"
-shadow = "9.2.2"
-unimined = "8e64092954"
+spotless = "8.4.0"
+shadow = "9.4.1"
+unimined = "1.4.2-SNAPSHOT"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version = "26.0.2" }
-ignite-api = { group = "space.vectrix.ignite", name = "ignite-api", version = "1.1.0" }
-mixin = { group = "org.spongepowered", name = "mixin", version = "0.8.5-SNAPSHOT" }
+ignite-api = { group = "space.vectrix.ignite", name = "ignite-api", version = "1.2.1" }
+mixin = { group = "org.spongepowered", name = "mixin", version = "0.8.7-SNAPSHOT" }
 asm = { group = "org.ow2.asm", name = "asm-tree", version = "9.7.1"}
 
 [plugins]

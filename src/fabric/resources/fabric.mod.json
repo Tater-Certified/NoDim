@@ -14,14 +14,11 @@
   "icon": "${mod_name}.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.github.tatercertified.fabric.NoDimFabric"
-    ],
     "client": [],
     "server": []
   },
   "mixins": [
-    "nodim.mixins.fabric.json"
+    "nodim.mixins.vanilla.json"
   ],
   "depends": {
     "fabricloader": "*",

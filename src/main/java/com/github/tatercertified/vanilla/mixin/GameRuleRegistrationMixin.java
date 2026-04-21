@@ -5,11 +5,9 @@
 package com.github.tatercertified.vanilla.mixin;
 
 import com.github.tatercertified.vanilla.NoDim;
-
 import net.minecraft.world.level.gamerules.GameRule;
 import net.minecraft.world.level.gamerules.GameRuleCategory;
 import net.minecraft.world.level.gamerules.GameRules;
-
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class GameRuleRegistrationMixin {
     @Shadow
     private static GameRule<Boolean> registerBoolean(
-            String name, GameRuleCategory category, boolean defaultValue) {
+            String id, GameRuleCategory category, boolean defaultValue) {
         return null;
     }
 

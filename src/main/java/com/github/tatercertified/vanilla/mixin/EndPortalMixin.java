@@ -5,14 +5,12 @@
 package com.github.tatercertified.vanilla.mixin;
 
 import com.github.tatercertified.vanilla.NoDim;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EndPortalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Coerce;
@@ -28,12 +26,12 @@ public class EndPortalMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void nodim$checkIfEndIsEnabled(
-            BlockState blockState,
+            BlockState state,
             Level level,
-            BlockPos blockPos,
+            BlockPos pos,
             Entity entity,
-            @Coerce Object insideBlockEffectApplier,
-            boolean bl,
+            @Coerce Object effectApplier,
+            boolean isPrecise,
             CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
                 && serverWorld.getGameRules().get(NoDim.DISABLE_END)) {
