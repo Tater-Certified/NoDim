@@ -5,7 +5,7 @@
   "injectors": {
     "defaultRequire": 0
   },
-  "plugin": "com.github.tatercertified.y_intmdry.NoDimMixinPlugin",
+  "plugin": "com.moulberry.mixinconstraints.ConstraintsMixinPlugin",
   "package": "com.github.tatercertified.y_intmdry.mixin",
   "mixins": [
     "EndPortalMixin",
