@@ -42,7 +42,7 @@ spotless {
         leadingTabsToSpaces()
         endWithNewline()
         licenseHeader("""/**
- * Copyright (c) 2025 $author
+ * Copyright (c) 2026 $author
  * This project is Licensed under <a href="$sourceUrl/blob/main/LICENSE">$license</a>
  */""")
     }
@@ -92,6 +92,7 @@ repositories {
     unimined.parchmentMaven()
     unimined.spongeMaven()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
 }
 
 unimined.minecraft {
@@ -153,9 +154,7 @@ dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    paperCompileOnly("io.papermc.paper:paper-api:$minecraftVersion-$paperVersion")
-    paperCompileOnly(libs.ignite.api)
-    spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
+    implementation("com.github.Tater-Certified:MixinConstraints:95198110a3")
 }
 
 tasks.withType<ProcessResources> {

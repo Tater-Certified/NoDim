@@ -1,11 +1,11 @@
 /**
- * Copyright (c) 2025 QPCrummer
+ * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/NoDim/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin.v1_17;
+package com.github.tatercertified.vanilla.mixin;
 
 import com.github.tatercertified.vanilla.NoDim;
-import com.github.tatercertified.vanilla.annotation.MCVer;
+import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -18,9 +18,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@MCVer(min = "1.17", max = "1.20.6")
 @Mixin(TheEndGatewayBlockEntity.class)
-public class TheGatewayPortalMixin {
+public class OldGatewayPortalMixin {
+    @IfMinecraftVersion(minVersion = "1.17.0", maxVersion = "1.19.4")
     @Inject(
             method = {
                 "teleportTick", // Mojmap
@@ -29,7 +29,7 @@ public class TheGatewayPortalMixin {
             },
             at = @At("HEAD"),
             cancellable = true)
-    private static void nodim$checkIfGatewayIsEnabled(
+    private static void nodim$checkIfGatewayIsEnabled1_17(
             Level level,
             BlockPos pos,
             BlockState state,
@@ -37,6 +37,23 @@ public class TheGatewayPortalMixin {
             CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
                 && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
+            ci.cancel();
+        }
+    }
+
+    @IfMinecraftVersion(maxVersion = "1.16.5")
+    @Inject(
+            method = {
+                "tick", // Mojmap
+                "method_16896", // Intermediary
+                "m_155107_" // SRG
+            },
+            at = @At("HEAD"),
+            cancellable = true)
+    private void nodim$checkIfGatewayIsEnabled1_14_3(CallbackInfo ci) {
+        Level level = ((TheEndGatewayBlockEntity) (Object) this).getLevel();
+        if (level instanceof ServerLevel
+                && level.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }

@@ -14,9 +14,7 @@
   "icon": "${mod_name}.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.github.tatercertified.fabric.NoDimFabric"
-    ],
+    "main": [],
     "client": [],
     "server": []
   },
