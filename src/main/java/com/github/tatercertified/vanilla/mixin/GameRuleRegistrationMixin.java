@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRules.class)
 public class GameRuleRegistrationMixin {
+
     // Old
+    @IfMinecraftVersion(maxVersion = "1.15.2")
     @Shadow(aliases = {"method_8359", "m_46189_"})
     private static <T extends GameRules.Value<T>> GameRules.Key<T> register(
             String string, GameRules.Type<T> type) {
@@ -26,6 +28,7 @@ public class GameRuleRegistrationMixin {
     }
 
     // New
+    @IfMinecraftVersion(minVersion = "1.16.0")
     @Shadow(aliases = "method_8359")
     private static <T extends GameRules.Value<T>> GameRules.Key<T> register(
             String name, GameRules.Category category, GameRules.Type<T> type) {

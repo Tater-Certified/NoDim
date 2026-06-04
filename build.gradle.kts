@@ -164,6 +164,9 @@ dependencies {
     mainCompileOnly(libs.mixin)
     shadowConfig("com.github.Tater-Certified:MixinConstraints:95198110a3")
     implementation("com.github.Tater-Certified:MixinConstraints:95198110a3")
+    // This is needed for older versions
+    shadowConfig("org.slf4j:slf4j-api:1.7.36")
+    implementation("org.slf4j:slf4j-api:1.7.36")
 }
 
 tasks.withType<ProcessResources> {
