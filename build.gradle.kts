@@ -72,6 +72,8 @@ val fabricModImplementation: Configuration by configurations.creating {
     extendsFrom(modImplementation)
 }
 
+val shadowConfig by configurations.creating
+
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
 }
@@ -115,7 +117,13 @@ unimined.minecraft(fabric) {
 
 tasks.register<ShadowJar>("relocateFabricJar") {
     dependsOn("remapFabricJar")
+
+    // Include the remapped jar
     from(zipTree(tasks.getByName<RemapJarTask>("remapFabricJar").asJar.archiveFile.get().asFile))
+
+    // Include the dependencies defined in shadowConfig
+    configurations = listOf(shadowConfig)
+
     archiveClassifier.set("fabric-relocated")
     relocate("com.github.tatercertified.vanilla", "com.github.tatercertified.y_intmdry")
 }
@@ -154,6 +162,7 @@ dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
+    shadowConfig("com.github.Tater-Certified:MixinConstraints:95198110a3")
     implementation("com.github.Tater-Certified:MixinConstraints:95198110a3")
 }
 
