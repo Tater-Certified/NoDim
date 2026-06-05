@@ -11,11 +11,12 @@ The mod includes the following gamerules to disable access to certain dimensions
 - `/gamerule disableNether <bool>`: Disables the Nether Portal
 - `/gamerule disableGateway <bool>`: Disables the End Gateway Portals
 
-# Supported Platforms (As of v1.1.0)
+# Supported Platforms (As of v1.3.1)
 - Fabric/Quilt (1.14.3 - 1.21.10)
 - Forge (1.14.3 - 1.21.10)
 - NeoForge (1.14.3 - 1.21.10)
-- PaperMC/Spigot/Folia (1.14.3 - 1.21.10)
+- Spigot (1.17.1 - 1.21.10)
+- PaperMC & Forks (1.20.6 - 1.21.10)
 - Sponge (1.14.3 - 1.21.10)
 
 # Installation
