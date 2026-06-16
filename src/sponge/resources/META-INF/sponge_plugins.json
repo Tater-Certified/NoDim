@@ -18,12 +18,6 @@
         "issues": "${issue_url}"
       },
       "dependencies": [
-        {
-          "id": "spongeapi",
-          "version": "${sponge_version}",
-          "load-order": "after",
-          "optional": false
-        }
       ]
     }
   ]
