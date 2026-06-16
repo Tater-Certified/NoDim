@@ -37,7 +37,7 @@ spotless {
         leadingTabsToSpaces()
         endWithNewline()
         licenseHeader("""/**
- * Copyright (c) 2025 $author
+ * Copyright (c) 2026 $author
  * This project is Licensed under <a href="$sourceUrl/blob/main/LICENSE">$license</a>
  */""")
     }
@@ -126,9 +126,6 @@ dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    paperCompileOnly("io.papermc.paper:paper-api:$paperVersion")
-    paperCompileOnly(libs.ignite.api)
-    spongeCompileOnly("org.spongepowered:spongeapi:$spongeVersion")
 }
 
 tasks.withType<ProcessResources> {
