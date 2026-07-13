@@ -161,7 +161,6 @@ dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    shadowConfig("com.github.Tater-Certified:MixinConstraints:240c997ef4")
     implementation("com.github.Tater-Certified:MixinConstraints:240c997ef4")
 }
 
@@ -180,17 +179,22 @@ tasks.withType<ProcessResources> {
     }
 }
 
-tasks.jar {
+tasks.build.get().dependsOn("spotlessApply")
+
+tasks.shadowJar {
     dependsOn("relocateFabricJar")
 
-    from(
-        zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile),
-        forge.output,
-        neoforge.output,
-        paper.output,
-        sponge.output,
-    )
+    archiveClassifier.set("")
 
+    from(sourceSets.main.get().output)
+    from(zipTree(tasks.getByName<Jar>("relocateFabricJar").archiveFile.get().asFile))
+    from(forge.output)
+    from(neoforge.output)
+    from(paper.output)
+    from(sponge.output)
+
+    enableAutoRelocation = true
+    relocationPrefix = "nodim"
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
@@ -213,9 +217,11 @@ tasks.jar {
         into("META-INF")
     }
 }
-tasks.build.get().dependsOn("spotlessApply")
 
-tasks.shadowJar {
-    enableAutoRelocation = true
-    relocationPrefix = "nodim"
+tasks.build {
+    dependsOn(tasks.shadowJar)
+}
+
+tasks.jar {
+    enabled = false
 }
