@@ -86,7 +86,6 @@ tasks.withType<RemapJarTask> {
 }
 
 repositories {
-    // maven("https://maven.neuralnexus.dev/mirror")
     mavenCentral()
     unimined.fabricMaven()
     unimined.minecraftForgeMaven()
@@ -162,11 +161,8 @@ dependencies {
     mainCompileOnly(libs.asm)
     mainCompileOnly(libs.annotations)
     mainCompileOnly(libs.mixin)
-    shadowConfig("com.github.Tater-Certified:MixinConstraints:95198110a3")
-    implementation("com.github.Tater-Certified:MixinConstraints:95198110a3")
-    // This is needed for older versions
-    shadowConfig("org.slf4j:slf4j-api:1.7.36")
-    implementation("org.slf4j:slf4j-api:1.7.36")
+    shadowConfig("com.github.Tater-Certified:MixinConstraints:240c997ef4")
+    implementation("com.github.Tater-Certified:MixinConstraints:240c997ef4")
 }
 
 tasks.withType<ProcessResources> {
@@ -218,3 +214,8 @@ tasks.jar {
     }
 }
 tasks.build.get().dependsOn("spotlessApply")
+
+tasks.shadowJar {
+    enableAutoRelocation = true
+    relocationPrefix = "nodim"
+}
