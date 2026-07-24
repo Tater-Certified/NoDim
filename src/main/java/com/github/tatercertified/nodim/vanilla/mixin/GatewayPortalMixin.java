@@ -2,16 +2,16 @@
  * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/NoDim/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin;
+package com.github.tatercertified.nodim.vanilla.mixin;
 
-import com.github.tatercertified.vanilla.NoDim;
+import com.github.tatercertified.nodim.vanilla.NoDim;
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.level.block.EndGatewayBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(NetherPortalBlock.class)
-public class NetherPortalMixin {
+@Mixin(EndGatewayBlock.class)
+public class GatewayPortalMixin {
     @IfMinecraftVersion(minVersion = "1.21.10")
     @Inject(
             method = {
@@ -32,7 +32,7 @@ public class NetherPortalMixin {
             cancellable = true,
             require = 0,
             expect = 1)
-    private void nodim$checkIfNetherIsEnabled1_21_10(
+    private void nodim$checkIfGatewayIsEnabled1_21_10(
             BlockState blockState,
             Level level,
             BlockPos blockPos,
@@ -41,7 +41,7 @@ public class NetherPortalMixin {
             boolean bl,
             CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_NETHER)) {
+                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }
@@ -56,10 +56,10 @@ public class NetherPortalMixin {
             cancellable = true,
             require = 0,
             expect = 1)
-    private void nodim$checkIfNetherIsEnabled1_21_5(
+    private void nodim$checkIfGatewayIsEnabled1_21_5(
             BlockState blockState, Level level, BlockPos blockPos, Entity entity, CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_NETHER)) {
+                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }
@@ -74,7 +74,7 @@ public class NetherPortalMixin {
             cancellable = true,
             require = 0,
             expect = 1)
-    private void nodim$checkIfNetherIsEnabled1_21_5(
+    private void nodim$checkIfGatewayIsEnabled1_21_5(
             BlockState blockState,
             Level level,
             BlockPos blockPos,
@@ -82,24 +82,23 @@ public class NetherPortalMixin {
             @Coerce Object insideBlockEffectApplier,
             CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_NETHER)) {
+                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }
 
-    @IfMinecraftVersion(maxVersion = "1.21.4")
+    @IfMinecraftVersion(minVersion = "1.21.0", maxVersion = "1.21.4")
     @Inject(
             method = {
                 "entityInside", // Mojmap
-                "method_9548", // Intermediary
-                "m_7892_" // SRG
+                "method_9548" // Intermediary
             },
             at = @At("HEAD"),
             cancellable = true)
-    private void nodim$checkIfEndIsEnabled1_14_3(
-            BlockState blockState, Level level, BlockPos blockPos, Entity entity, CallbackInfo ci) {
+    private void nodim$checkIfGatewayIsEnabled1_21(
+            BlockState state, Level level, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (level instanceof ServerLevel serverWorld
-                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_NETHER)) {
+                && serverWorld.getServer().getGameRules().getBoolean(NoDim.DISABLE_GATEWAY)) {
             ci.cancel();
         }
     }

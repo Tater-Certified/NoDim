@@ -6,7 +6,7 @@
     "defaultRequire": 0
   },
   "plugin": "com.moulberry.mixinconstraints.ConstraintsMixinPlugin",
-  "package": "com.github.tatercertified.vanilla.mixin",
+  "package": "com.github.tatercertified.nodim.vanilla.mixin",
   "mixins": [
     "EndPortalMixin",
     "GameRuleRegistrationMixin",

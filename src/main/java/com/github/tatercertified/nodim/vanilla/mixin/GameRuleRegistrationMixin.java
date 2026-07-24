@@ -2,9 +2,9 @@
  * Copyright (c) 2026 QPCrummer
  * This project is Licensed under <a href="https://github.com/Tater-Certified/NoDim/blob/main/LICENSE">MIT</a>
  */
-package com.github.tatercertified.vanilla.mixin;
+package com.github.tatercertified.nodim.vanilla.mixin;
 
-import com.github.tatercertified.vanilla.NoDim;
+import com.github.tatercertified.nodim.vanilla.NoDim;
 import com.moulberry.mixinconstraints.annotations.IfMinecraftVersion;
 
 import net.minecraft.world.level.GameRules;
